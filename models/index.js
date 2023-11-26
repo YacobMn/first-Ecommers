@@ -21,11 +21,13 @@ Product.belongsTo(Category, {
   foreignKey: 'category_id',
 });
 
-Product.hasMany(Photo, {
+Product.hasMany(Tag, {
   foreignKey: 'product_id',
   onDelete: 'CASCADE'
 });
-
+Tag.belongsTo(ProductTag, {
+  foreignkey: 'tag_id',
+})
 
 module.exports = {
   Product,

@@ -7,12 +7,48 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 router.get('/', (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
+  try {
+    // Find all records and include other model data
+    const data =  Product.findAll({
+        attributes: ['id','title', 'description', 'price'],
+        include: [
+            { model: Category, attributes: ['title'] },
+            
+        ]
+    });
+
+    
+    res.status(200).json(products);
+
+} catch (err) {
+    res.status(500).json(err);
+}
 });
 
 // get one product
 router.get('/:id', (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
+  try {
+    // Find record by id and include other model data
+    const data = Product.findByPk(req.params.id, {
+        attributes: ['id','title', 'description', 'price'],
+        include: [
+            { model: Category, attributes: ['title'] },
+            { model: Photo, attributes: ['url_link'] }
+        ]
+    });
+    // Return an error if record not found
+    if (!data) {
+        res.status(404).json({ message: 'Record ' + req.params.id + ' not found.' });
+        return;
+    }
+
+    res.status(200).json(product);
+
+} catch (err) {
+    res.status(500).json(err);
+}
 });
 
 // create new product
@@ -94,6 +130,18 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // delete one product by its `id` value
+  try {
+    const data = Product.destroy({
+        where: { id: req.params.id }
+    });
+    if (!data) {
+        res.status(404).json({ message: 'Record ' + req.params.id + ' not found.' });
+        return;
+    }
+    res.status(200).json({ message: 'Record ' + req.params.id + ' is deleted.' });
+} catch (err) {
+    res.status(500).json(err);
+}
 });
 
 module.exports = router;
