@@ -21,11 +21,12 @@ Product.belongsTo(Category, {
   foreignKey: 'category_id',
 });
 
-Product.hasMany(Tag, {
-  foreignKey: 'product_id',
-  onDelete: 'CASCADE'
+Product.belongsToMany(Tag, {
+  through: ProductTag,
+  foreignKey: 'product_id'
 });
-Tag.belongsTo(ProductTag, {
+Tag.belongsToMany(Product, {
+  through: ProductTag,
   foreignkey: 'tag_id',
 })
 

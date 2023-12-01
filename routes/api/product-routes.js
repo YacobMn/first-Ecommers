@@ -4,21 +4,21 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 // The `/api/products` endpoint
 
 // get all products
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
   try {
     // Find all records and include other model data
-    const data =  Product.findAll({
-        attributes: ['id','title', 'description', 'price'],
+    const product =  await Product.findAll({
+        
         include: [
-            { model: Category, attributes: ['title'] },
+            { model: Category },
             
         ]
     });
 
     
-    res.status(200).json(products);
+    res.status(200).json(product);
 
 } catch (err) {
     res.status(500).json(err);
@@ -26,16 +26,15 @@ router.get('/', (req, res) => {
 });
 
 // get one product
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
   try {
     // Find record by id and include other model data
-    const data = Product.findByPk(req.params.id, {
-        attributes: ['id','title', 'description', 'price'],
+    const product = await Product.findByPk(req.params.id, {
+        
         include: [
-            { model: Category, attributes: ['title'] },
-            { model: Photo, attributes: ['url_link'] }
+            { model: Category}
         ]
     });
     // Return an error if record not found
@@ -52,7 +51,7 @@ router.get('/:id', (req, res) => {
 });
 
 // create new product
-router.post('/', (req, res) => {
+router.post('/',  (req, res) => {
   /* req.body should look like this...
     {
       product_name: "Basketball",
@@ -128,10 +127,10 @@ router.put('/:id', (req, res) => {
     });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   // delete one product by its `id` value
   try {
-    const data = Product.destroy({
+    const data = await Product.destroy({
         where: { id: req.params.id }
     });
     if (!data) {

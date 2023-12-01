@@ -13,10 +13,23 @@ ProductTag.init(
       primaryKey: true,
       autoIncrement: true
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false
+    tag_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'tag',
+        key: 'id',
+      },
     },
+    product_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'product',
+        key: 'id',
+      },
+    },
+
     
   },
   {
